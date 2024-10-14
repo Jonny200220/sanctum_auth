@@ -23,35 +23,50 @@ class DepartmentController extends Controller
     {
         $rules = ['name' => 'required|string|min:1|max: 100'];
         
-        // $validator = \Validator::make($request);
-        // if($validator->fails()){
-        //     return response()->json([
-        //         'status' => false,
-        //         'errors' => $validator ->errors()->all()
-        //     ], 400);
-        // }
+        $validator = \Validator::make($request->input(), $rules);
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'errors' => $validator ->errors()->all()
+            ], 400);
+        }
+        $department = new Department($request->input());
+        $department->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'Department created succesfully'
+        ], 200);
+
     }
-    /**
-     * Display the specified resource.
-     */
+    
     public function show(Department $department)
     {
-        //
+        return response()->json(['status'=>true, 'data'=>$department]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Department $department)
     {
-        //
-    }
+        $rules = ['name' => 'required|string|min:1|max: 100'];
 
-    /**
-     * Remove the specified resource from storage.
-     */
+        $validator = \Validator::make($request->input(), $rules);
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'errors' => $validator ->errors()->all()
+            ], 400);
+        }
+        $department->update($request->input());
+        return response()->json([
+            'status' => true,
+            'message' => 'Department updated succesfully'
+        ], 200);
+    }
     public function destroy(Department $department)
     {
-        //
+        $department->delete();
+        return response()->json([
+            'status' => true,
+            'message' => 'Department deleted succesfully'
+        ], 200);
     }
 }
