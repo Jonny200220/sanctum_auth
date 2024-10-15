@@ -34,7 +34,7 @@ class EmployeeController extends Controller
         $employee->save();
         return response()->json([
             'status' => true,
-            'errors' => 'Employee created succesfully'
+            'message' => 'Employee created succesfully'
         ], 200);
     }
 
@@ -75,10 +75,10 @@ class EmployeeController extends Controller
     }
     
     public function EmployeesByDepartment(){
-        $employees = Employee::select(DB::raw('count(employees.id) as count'), 'departments.name')
-            ->join('departments', 'departments.id', '=', 'employees.department_id')
-            ->groupBy('departments.name')
-            ->get($employees);
+        $employees = Employee::select(DB::raw('count(employees.id) as count, departments.name'))
+            ->rightJoin('departments', 'departments.id', '=', 'employees.department_id')
+            ->groupBy('departments.name')->get();
+            return response()->json($employees);
     }
     
 
